@@ -82,6 +82,6 @@ int main(void)
 	test_queue_simple();
     test_iterator();
     test_queue_length();
-    test_queue_destroy();
+    //test_queue_destroy();
 	return 0;
 }

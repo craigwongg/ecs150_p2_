@@ -1,5 +1,6 @@
 apps/*.d
 apps/*.o
+apps/*.x
 libuthread/*.o
 libuthread/*.d
 libuthread/*.a

@@ -79,7 +79,7 @@ void uthread_exit(void)
 int uthread_create(uthread_func_t func, void *arg)
 {
 	/* TODO Phase 2 */
-	struct uthread_tcb* tcb = malloc(sizeof(struct uthread_tcb));
+	struct uthread_tcb* tcb = (struct uthread_tcb*)malloc(sizeof(struct uthread_tcb));
 	void* sp = uthread_ctx_alloc_stack();
 
 	uthread_ctx_init(&(tcb->ctx), sp, func, arg);
@@ -105,7 +105,7 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 	}
 
 	/* idle thread creation*/
-	struct uthread_tcb* tcb_idle = malloc(sizeof(struct uthread_tcb));
+	struct uthread_tcb* tcb_idle = (struct uthread_tcb*)malloc(sizeof(struct uthread_tcb));
 	tcb_idle->state == RUNNING;
 	queue_enqueue(running_queue, tcb_idle);
 

@@ -4,7 +4,7 @@ CFLAGS := -Wall -Werror -Wextra -g
 
 # Target library name and source files
 TARGET := libuthread.a
-SOURCES := queue.c uthread.c
+SOURCES := queue.c uthread.c context.c preempt.c
 
 # Object files (generated automatically by make)
 OBJECTS := $(SOURCES:.c=.o)

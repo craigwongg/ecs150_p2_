@@ -73,20 +73,28 @@ void uthread_exit(void)
 	queue_enqueue(running_queue, tcb_handler_ready);
 
 	uthread_ctx_destroy_stack(tcb_handler_exit->stack_ptr);
+	free(tcb_handler_exit);
 	uthread_ctx_switch(&(tcb_handler_exit->ctx), &(tcb_handler_ready->ctx));
 }
 
 int uthread_create(uthread_func_t func, void *arg)
 {
 	/* TODO Phase 2 */
-	struct uthread_tcb* tcb = malloc(sizeof(struct uthread_tcb));
+	struct uthread_tcb* tcb = (struct uthread_tcb*)malloc(sizeof(struct uthread_tcb));
 	void* sp = uthread_ctx_alloc_stack();
+
+	if(tcb == NULL || sp == NULL) {
+		fprintf(stderr, "Error: invalid memory allocation");
+		return -1;
+	}
 
 	uthread_ctx_init(&(tcb->ctx), sp, func, arg);
 	tcb->stack_ptr = sp;
 	tcb->state = READY;
 
 	queue_enqueue(ready_queue, tcb);
+
+	return 0;
 }
 
 int uthread_run(bool preempt, uthread_func_t func, void *arg)
@@ -105,8 +113,8 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 	}
 
 	/* idle thread creation*/
-	struct uthread_tcb* tcb_idle = malloc(sizeof(struct uthread_tcb));
-	tcb_idle->state == RUNNING;
+	struct uthread_tcb* tcb_idle = (struct uthread_tcb*)malloc(sizeof(struct uthread_tcb));
+	tcb_idle->state = RUNNING;
 	queue_enqueue(running_queue, tcb_idle);
 
 	/* New thread: Beginning of thread library */
@@ -129,5 +137,7 @@ void uthread_block(void)
 void uthread_unblock(struct uthread_tcb *uthread)
 {
 	/* TODO Phase 3 */
+	(void)uthread;
+
 }
 

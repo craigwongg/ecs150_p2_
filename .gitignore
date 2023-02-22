@@ -1,6 +1,8 @@
 apps/*.d
 apps/*.o
 apps/*.x
+apps/.DS_Store
 libuthread/*.o
 libuthread/*.d
 libuthread/*.a
+libuthread/.DS_Store

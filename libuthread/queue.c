@@ -35,10 +35,8 @@ queue_t queue_create(void)
 	// Initializing head/tail to NULL 
 	q -> head = NULL;
 	q -> tail = NULL;
-
 	// Initialize size to 0
 	q -> size = 0;
-
 	// Return new queue
 	return q;
 }
@@ -55,7 +53,6 @@ int queue_destroy(queue_t queue)
 	// Deallocate  
 	free(queue);
 	return 0;
-	
 }
 int queue_enqueue(queue_t queue, void *data)
 { 
@@ -93,7 +90,6 @@ int queue_enqueue(queue_t queue, void *data)
 	// Increment size of queue
 	queue -> size++;
 	return 0;
-	
 }
 
 int queue_dequeue(queue_t queue, void **data)
@@ -106,7 +102,7 @@ int queue_dequeue(queue_t queue, void **data)
 	}
 	
 	// Get the oldest node from the head of the queue 
-	struct node *oldest = queue -> head; 
+	struct node *oldest = queue -> head;
 	queue -> head = oldest -> next;
 	queue -> size--;
 	*data = oldest -> data;
@@ -124,41 +120,41 @@ int queue_delete(queue_t queue, void *data)
     if (queue == NULL || data == NULL || queue -> size == 0) {
         return -1;
     }
+	node *curr_node = queue -> head;
+	node *prev_node = NULL;
 
-    node *curr_node = queue->head;
-    node *prev_node = NULL;
+	while (curr_node != NULL) {
 
-    while (curr_node != NULL) {
+		// Check if current node has data and must be deleted
+		if (curr_node -> data == data) {
+			// Check if current node is the head node
+			if (prev_node == NULL) {
+				queue -> head = curr_node -> next;
 
-        // Check if current node contains the data to be deleted
-        if (curr_node->data == data) {
-
-            // Check if current node is the head node
-            if (prev_node == NULL) {
-                queue->head = curr_node->next;
-
-                // Check if current node is also the tail node
-                if (curr_node == queue->tail) {
-                    queue->tail = NULL;
+				// Check if current node is also the tail node
+				if (curr_node == queue -> tail) {
+					queue -> tail = NULL;
                 }
 
-            } else {
-                prev_node->next = curr_node->next;
+            } 
 
-                // Check if current node is the tail node
-                if (curr_node == queue->tail) {
-                    queue->tail = prev_node;
+			else {
+				prev_node -> next = curr_node -> next;
+
+				// Check if current node is the tail node
+				if (curr_node == queue -> tail) {
+					queue -> tail = prev_node;
                 }
 
             }
 			
 			// Free allocated space and update size of queue
-            free(curr_node);
+			free(curr_node);
 			queue -> size--;
-            return 0;
+			return 0;
         }
-        prev_node = curr_node;
-        curr_node = curr_node->next;
+		prev_node = curr_node;
+		curr_node = curr_node -> next;
     }
 
     // Data not found in queue
@@ -174,18 +170,17 @@ int queue_iterate(queue_t queue, queue_func_t func)
 		return -1;
 	}
 	else {
-
-		// Set current node to head
+		// Set current node to the head
 		node* currNode = queue -> head;
 		node* nextNode;
 		
-		// Loop through each node in queue
+		// Loop through each node in the queue
 		while (currNode != NULL) {
 
 			// Get next node in queue
 			nextNode = currNode -> next;
 
-			// Call function on current node's data
+			// Call function on the current node data
 			func(queue, currNode -> data);
 
 			// If last node is reached return 0
@@ -193,14 +188,13 @@ int queue_iterate(queue_t queue, queue_func_t func)
 				return 0;
 			}
 			else {
-
-			// Set current node to next node
+				// Set current node to the next node
 				currNode = nextNode;
 			}
 		}
 	}
 	
-	// Return 0 if successful
+	// If successful, return 0
 	return 0;
 }
 

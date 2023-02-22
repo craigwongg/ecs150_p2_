@@ -9,7 +9,7 @@ void test_create(void)
 {
 	fprintf(stderr, "\n@@@@@ QUEUE_CREATE Test @@@@@\n");
 	assert(queue_create() != NULL);
-    fprintf(stderr, "PASSED\n");
+    	fprintf(stderr, "PASSED\n");
 }
 
 // Test Enqueue/Dequeue
@@ -24,7 +24,7 @@ void test_queue_simple(void)
 	queue_dequeue(q, (void**)&ptr);
 	assert(ptr == &data);
 	queue_destroy(q);
-    fprintf(stderr, "PASSED\n");
+    	fprintf(stderr, "PASSED\n");
 }
 
 // Test Delete
@@ -43,7 +43,7 @@ void test_iterator(void)
     queue_t q;
     int data[] = {42, 1, 2, 3, 4, 5, 42, 6, 7, 8, 9, 42};
     size_t i;
-	fprintf(stderr, "\n@@@@@ QUEUE_ITERATE/QUEUE_DELETE Test @@@@@\n");
+    fprintf(stderr, "\n@@@@@ QUEUE_ITERATE/QUEUE_DELETE Test @@@@@\n");
 
     /* Initialize the queue and enqueue items */
     q = queue_create();
@@ -75,13 +75,14 @@ void test_queue_destroy(void) {
     queue_destroy(q1);
     fprintf(stderr, "PASSED\n\n");
 }
+
 // Main
 int main(void)
 {
     test_create();
-	test_queue_simple();
+    test_queue_simple();
     test_iterator();
     test_queue_length();
     test_queue_destroy();
-	return 0;
+    return 0;
 }

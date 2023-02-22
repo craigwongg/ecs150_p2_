@@ -21,7 +21,6 @@ static queue_t running_queue = NULL;
 static queue_t blocked_queue = NULL;
 
 struct uthread_tcb {
-	/* TODO Phase 2 */
 	/* This struct will act as queue data and being pushed to scheduler
 	 * @ctx:	uthread_ctx_t context  pointer storing register context
 	 * @stack_ptr:		stack pointer of different threads  
@@ -34,7 +33,6 @@ struct uthread_tcb {
 
 struct uthread_tcb *uthread_current(void)
 {
-	/* TODO Phase 2/3 */
 	struct uthread_tcb* temp_tcb;
 	queue_dequeue(running_queue, (void**)&temp_tcb);
 	queue_enqueue(running_queue, temp_tcb);
@@ -44,7 +42,6 @@ struct uthread_tcb *uthread_current(void)
 
 void uthread_yield(void)
 {
-	/* TODO Phase 2 */
 	/* Go back to main threat if nothing on scheduler*/
 	if (queue_length(ready_queue) == 0) {
 		return;
@@ -67,7 +64,6 @@ void uthread_yield(void)
 
 void uthread_exit(void)
 {
-	/* TODO Phase 2 */
 	struct uthread_tcb* tcb_handler_ready;
 	struct uthread_tcb* tcb_handler_exit;
 
@@ -85,7 +81,6 @@ void uthread_exit(void)
 
 int uthread_create(uthread_func_t func, void *arg)
 {
-	/* TODO Phase 2 */
 	struct uthread_tcb* tcb = (struct uthread_tcb*)malloc(sizeof(struct uthread_tcb));
 	void* sp = uthread_ctx_alloc_stack();
 
@@ -105,7 +100,6 @@ int uthread_create(uthread_func_t func, void *arg)
 
 int uthread_run(bool preempt, uthread_func_t func, void *arg)
 {
-	/* TODO Phase 2 */
 	queue_t init_q_ready = queue_create();
 	queue_t init_q_running = queue_create();
 	queue_t init_q_block = queue_create();
@@ -141,7 +135,6 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 
 void uthread_block(void)
 {
-	/* TODO Phase 3 */
 	/* Abnormal case of eventhing is being blocked*/
 	if (queue_length(ready_queue) == 0) {
 		fprintf(stderr, "Abonamal case of all threads locked!");
@@ -172,7 +165,6 @@ void uthread_block(void)
 
 void uthread_unblock(struct uthread_tcb *uthread)
 {
-	/* TODO Phase 3 */
 	uthread->state = READY;
 	queue_enqueue(ready_queue, uthread);
 

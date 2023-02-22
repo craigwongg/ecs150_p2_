@@ -15,26 +15,32 @@
  */
 #define HZ 100
 
+sigset_t set;
+struct sigaction newSig, prevSeg;
+
 void preempt_disable(void)
 {
-	/* TODO Phase 4 */
+    // sigprocmask(SIG_BLOCK, &set, NULL);
 }
 
 void preempt_enable(void)
 {
-	/* TODO Phase 4 */
+    // sigprocmask(SIG_UNBLOCK, &set, NULL);
 }
 
 void preempt_start(bool preempt)
 {
-	/* TODO Phase 4 */
-	if(preempt) {
-		preempt_enable();
-	}
+    if (preempt) {
+        sigemptyset(&set);
+        sigaddset(&set, SIGVTALRM);
+    }
+    else {
+        return; 
+    }
 }
 
 void preempt_stop(void)
 {
-	/* TODO Phase 4 */
+
 }
 

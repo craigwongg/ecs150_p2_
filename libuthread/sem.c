@@ -11,14 +11,12 @@ extern queue_t blocked_queue;
 
 
 struct semaphore {
-	/* TODO Phase 3 */
 	size_t count;
 	queue_t blocked_threads;
 };
 
 sem_t sem_create(size_t count)
 {
-	/* TODO Phase 3 */
 	sem_t sem = (sem_t) malloc(sizeof(struct semaphore));
 	sem->count = count;
 	sem->blocked_threads = queue_create();
@@ -28,14 +26,12 @@ sem_t sem_create(size_t count)
 
 int sem_destroy(sem_t sem)
 {
-	/* TODO Phase 3 */
 	queue_destroy(sem->blocked_threads);
 	free(sem);
 }
 
 int sem_down(sem_t sem)
 {
-	/* TODO Phase 3 */
 	if (sem->count == 0) {
 		queue_enqueue(sem->blocked_threads, uthread_current());
 		uthread_block();
@@ -46,7 +42,6 @@ int sem_down(sem_t sem)
 
 int sem_up(sem_t sem)
 {
-	/* TODO Phase 3 */
 	if (sem->count == 0) {
 		struct thread_tcb* temp_tcb;
 		queue_dequeue(sem->blocked_threads, (void**)&temp_tcb);

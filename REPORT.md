@@ -3,9 +3,9 @@
 # Summary
 
 The ultimate goal of this project is to better understand the idea of 
-threads using a user-level thread library. The user-level thread library 
-must be comprised of a queue, which is further comprised of a Uthread API, 
-Semaphore API, Preemption API. 
+threads using a user-level thread library. In order for this to work, 
+we must implement a queue API, uthread API, semaphore API, and 
+preemption API. 
 
 # Queue
 

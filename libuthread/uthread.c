@@ -12,7 +12,8 @@
 
 #define READY 0
 #define RUNNING 1
-#define EXITED 2
+#define BLOCKED 2
+#define EXITED 3
 
 /* Service as user scheduler */
 static queue_t ready_queue = NULL;
@@ -22,7 +23,7 @@ static queue_t blocked_queue = NULL;
 struct uthread_tcb {
 	/* TODO Phase 2 */
 	/* This struct will act as queue data and being pushed to scheduler
-	 * @ctx:	2d void pointer storing register context
+	 * @ctx:	uthread_ctx_t context  pointer storing register context
 	 * @stack_ptr:		stack pointer of different threads  
 	 * @state:			State of Thread RUNNING, READY, EXITED
 	 */
@@ -44,6 +45,11 @@ struct uthread_tcb *uthread_current(void)
 void uthread_yield(void)
 {
 	/* TODO Phase 2 */
+	/* Go back to main threat if nothing on scheduler*/
+	if (queue_length(ready_queue) == 0) {
+		return;
+	}
+
 	struct uthread_tcb* tcb_handler_ready;
 	struct uthread_tcb* tcb_handler_running;
 
@@ -120,6 +126,10 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 	/* New thread: Beginning of thread library */
 	uthread_create((uthread_func_t)func, arg);
 	while(queue_length(ready_queue) != 0) {
+		if (queue_length(ready_queue) == 0 &&
+		    queue_length(blocked_queue) == 0) {
+				break;
+			}
 		uthread_yield();
 	}
 
@@ -132,12 +142,40 @@ int uthread_run(bool preempt, uthread_func_t func, void *arg)
 void uthread_block(void)
 {
 	/* TODO Phase 3 */
+	/* Abnormal case of eventhing is being blocked*/
+	if (queue_length(ready_queue) == 0) {
+		fprintf(stderr, "Abonamal case of all threads locked!");
+		exit(1);
+	}
+
+	/* 
+	 * @ready_tcb, @running_tcb: TCB pointer
+	 * Intitialization to obtain data from queues 
+	 */
+	struct uthread_tcb* ready_tcb;
+	struct uthread_tcb* running_tcb;
+
+	/* 
+	 * Taking current running queue to block queue.
+	 * To prevent blocked queue to be scheduled for execution
+	 */
+	queue_dequeue(running_queue, (void**)&running_tcb);
+	running_tcb->state = BLOCKED;
+	queue_enqueue(blocked_queue, running_tcb);
+	
+	queue_dequeue(ready_queue, (void**)&ready_tcb);
+	ready_tcb->state = RUNNING;
+	queue_enqueue(running_queue, ready_tcb);
+
+	uthread_ctx_switch(&(running_tcb->ctx), &(ready_tcb->ctx));
 }
 
 void uthread_unblock(struct uthread_tcb *uthread)
 {
 	/* TODO Phase 3 */
-	(void)uthread;
+	uthread->state = READY;
+	queue_enqueue(ready_queue, uthread);
 
+	queue_delete(blocked_queue, uthread);
 }
 
